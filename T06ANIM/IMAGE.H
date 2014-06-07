@@ -1,5 +1,5 @@
 /* FILENAME: IMAGE.H
- * PROGRAMMER: VG4
+ * PROGRAMMER: EF2
  * PURPOSE: Image handle declaration module.
  * LAST UPDATE: 06.06.2014
  */
@@ -9,21 +9,21 @@
 
 #include "def.h"
 
-/* Структура хранения изображения */
+/* struct for picture */
 typedef struct tagIMAGE
 {
-  INT W, H;    /* Размер изображения */
-  HBITMAP hBm; /* Дескриптор загруженного изображения */
-  DWORD *Bits; /* Цвета точек */
+  INT W, H;    /* size of picture */
+  HBITMAP hBm; /* load image */
+  DWORD *Bits; /* array for pixels */
 } IMAGE;
 
-/* Функция загрузки изображения */
+/* Load image function */
 BOOL ImageLoad( IMAGE *Img, CHAR *FileName );
 
-/* Функция освобождения памяти из-под изображения */
+/* Free memory for image function */
 VOID ImageFree( IMAGE *Img );
 
-/* Функция получения цвета точки изображения */
+/* Get pixel color function */
 DWORD ImageGetP( IMAGE *Img, INT X, INT Y );
 
 #endif /* __IMAGE_H_ */

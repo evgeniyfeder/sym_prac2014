@@ -1,5 +1,5 @@
 /* FILENAME: UNITS.H
- * PROGRAMMER: VG4
+ * PROGRAMMER: EF2
  * PURPOSE: Globe project declaration module.
  * LAST UPDATE: 07.06.2014
  */
@@ -9,11 +9,11 @@
 
 #include "anim.h"
 
-/* Функция создания объекта анимации */
-vg4UNIT * VG4_CowUnitCreate( VOID );
+/* Create unit to cow function */
+ef2UNIT * EF2_CowUnitCreate( VOID );
 
-/* Функция создания информационного объекта анимации */
-vg4UNIT * VG4_InfoUnitCreate( VOID );
+/* Create informational unit function */
+ef2UNIT * EF2_InfoUnitCreate( VOID );
 
 #endif /* __UNITS_H_ */
 

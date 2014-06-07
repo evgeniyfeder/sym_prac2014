@@ -1,19 +1,19 @@
 /* FILENAME: IMAGE.C
- * PROGRAMMER: VG4
+ * PROGRAMMER: EF2
  * PURPOSE: Image handle functions
  * LAST UPDATE: 06.06.2014
  */
 
 #include "image.h"
 
-/* Функция загрузки изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
+/* Load image function.
+ * ARGUMENTS:
+ *   - pointer to picture:
  *       IMAGE *Img;
- *   - имя загружаемого файла:
- *       HDC hDC;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (BOOL) результат загрузки (TRUE - успешно).
+ *   - name of file:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) result of load (TRUE - seccess).
  */
 BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
 {
@@ -66,11 +66,11 @@ BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
   return Img->hBm != NULL;
 } /* End of 'ImageLoad' function */
 
-/* Функция освобождения памяти из-под изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
+/* Free memory for image function.
+ * ARGUMENTS:
+ *   - ponter to picture:
  *       IMAGE *Img;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+ * RETURNS: None.
  */
 VOID ImageFree( IMAGE *Img )
 {
@@ -83,14 +83,14 @@ VOID ImageFree( IMAGE *Img )
   Img->Bits = NULL;
 } /* End of 'ImageFree' function */
 
-/* Функция получения цвета точки изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
+/* Get pixel color function.
+ * ARGUMENTS:
+ *   - pointer to picture:
  *       IMAGE *Img;
- *   - координаты получаемой точки:
+ *   - coordinater of pixel:
  *       INT X, Y;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (DWORD) цвет получаемой точки.
+ * RETURNS:
+ *   (DWORD) color of pixel.
  */
 DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
 {

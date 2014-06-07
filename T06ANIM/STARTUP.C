@@ -1,5 +1,5 @@
 /* FILENAME: STARTUP.C
- * PROGRAMMER: VG4
+ * PROGRAMMER: EF2
  * PURPOSE: Animation startup module
  * LAST UPDATE: 07.06.2014
  */
@@ -12,23 +12,22 @@
 
 #define WND_CLASS_NAME "My Window Class Name"
 
-/* Ссылки вперед */
+/* Declaration of window function */
 LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
                                  WPARAM wParam, LPARAM lParam );
 
-/* Главная функция программы.
- * АРГУМЕНТЫ:
- *   - дескриптор экземпляра приложения:
+/* Main function of programme.
+ * ARGUMENTS:
+ *   - hInstance of programme:
  *       HINSTANCE hInstance;
- *   - дескриптор предыдущего экземпляра приложения
- *     (не используется и должно быть NULL):
+ *   - preview hInstance of programme:
  *       HINSTANCE hPrevInstance;
- *   - командная строка:
+ *   - command line:
  *       CHAR *CmdLine;
- *   - флаг показа окна (см. SW_SHOWNORMAL, SW_SHOWMINIMIZED, SW_***):
+ *   - flag to show screen:
  *       INT ShowCmd;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (INT) код возврата в операционную систему.
+ * RETURNS:
+ *   (INT) returned number for opertion sistem.
  */
 INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     CHAR *CmdLine, INT ShowCmd )
@@ -38,11 +37,11 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   MSG msg;
   INT i;
 
-  /* Регистрация - создание собственного класса окна */
+  /* Registar of class */
   wc.style = CS_HREDRAW | CS_VREDRAW;
-  wc.cbClsExtra = 0; /* Дополнительное количество байт для класса */
-  wc.cbWndExtra = 0; /* Дополнительное количество байт для окна */
-  wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* Фоновый цвет - выбранный в системе */
+  wc.cbClsExtra = 0; /* baits for class */
+  wc.cbWndExtra = 0; /* baits for hWnd */
+  wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
   wc.hCursor = LoadCursor(NULL, IDC_HAND);
   wc.hIcon = LoadIcon(NULL, IDI_ERROR);
   wc.lpszMenuName = NULL;
@@ -50,36 +49,35 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   wc.lpfnWndProc = MainWindowFunc;
   wc.lpszClassName = WND_CLASS_NAME;
 
-  /* Регистрируем класс */
+  /* Register class */
   if (!RegisterClass(&wc))
   {
     MessageBox(NULL, "Error register window class", "Error", MB_ICONERROR | MB_OK);
     return 0;
   }
 
-  /* Создание окна */
+  /* Create hWnd */
   hWnd = CreateWindow(WND_CLASS_NAME, "First Window Sample",
     WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Позиция окна (x, y) - по умолчанию */
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - по умолчанию */
-    NULL,                         /* Дескриптор родительского окна */
-    NULL,                         /* Дескриптор загруженного меню */
-    hInstance,                    /* Дескриптор приложения */
-    NULL);                        /* Указатель на дополнительные параметры */
+    CW_USEDEFAULT, CW_USEDEFAULT, 
+    CW_USEDEFAULT, CW_USEDEFAULT, 
+    NULL,                         
+    NULL,                         
+    hInstance,                    
+    NULL);                        
 
   ShowWindow(hWnd, ShowCmd);
   UpdateWindow(hWnd);
 
-  /*** Добавление объектов ***/
+  /*** Added unit ***/
   for (i = 0; i < 30 * 30; i++)
-    VG4_AnimAddUnit(VG4_CowUnitCreate());
-  VG4_AnimAddUnit(VG4_InfoUnitCreate());
+    EF2_AnimAddUnit(EF2_CowUnitCreate());
+  EF2_AnimAddUnit(EF2_InfoUnitCreate());
 
-  /* Запуск цикла обработки сообщений */
   while (GetMessage(&msg, NULL, 0, 0))
   {
     TranslateMessage(&msg);
-    /* Передача сообщений в функцию окна */
+    /* Message for programm */
     DispatchMessage(&msg);
   }
 
@@ -87,17 +85,17 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 } /* End of 'WinMain' function */
 
 /* Функция обработки сообщения окна.
- * АРГУМЕНТЫ:
- *   - дескриптор окна:
+ * ARGUMENTS:
+ *   - hWnd:
  *       HWND hWnd;
- *   - номер сообщения:
+ *   - Number of message:
  *       UINT Msg;
- *   - параметр сообшения ('word parameter'):
+ *   - word parameter:
  *       WPARAM wParam;
- *   - параметр сообшения ('long parameter'):
+ *   - long parameter:
  *       LPARAM lParam;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (LRESULT) - в зависимости от сообщения.
+ * RETURNS:
+ *   (LRESULT) - return message.
  */
 LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
                                  WPARAM wParam, LPARAM lParam )
@@ -116,13 +114,13 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_CREATE:
     SetTimer(hWnd, 30, 1, NULL);
-    VG4_AnimInit(hWnd);
+    EF2_AnimInit(hWnd);
     return 0;
   case WM_SIZE:
-    VG4_AnimResize(LOWORD(lParam), HIWORD(lParam));
+    EF2_AnimResize(LOWORD(lParam), HIWORD(lParam));
   case WM_TIMER:
-    VG4_AnimRender();
-    VG4_AnimCopyFrame();
+    EF2_AnimRender();
+    EF2_AnimCopyFrame();
     return 0;
   case WM_CHAR:
     switch ((CHAR)wParam)
@@ -131,10 +129,10 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
       DestroyWindow(hWnd);
       return 0;
     case 'f':
-      VG4_AnimFlipFullScreen();
+      EF2_AnimFlipFullScreen();
       return 0;
     case 'p':
-      VG4_AnimSetPause(pause = !pause);
+      EF2_AnimSetPause(pause = !pause);
       return 0;
     }
     return 0;
@@ -143,10 +141,10 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
     EndPaint(hWnd, &ps);
-    VG4_AnimCopyFrame();
+    EF2_AnimCopyFrame();
     return 0;
   case WM_DESTROY:
-    VG4_AnimClose();
+    EF2_AnimClose();
     PostQuitMessage(0);
     KillTimer(hWnd, 30);
     return 0;

@@ -1,5 +1,5 @@
 /* FILENAME: UNIT.C
- * PROGRAMMER: VG4
+ * PROGRAMMER: EF2
  * PURPOSE: Animation unit handle module.
  * LAST UPDATE: 07.06.2014
  */
@@ -9,77 +9,77 @@
 
 #include "anim.h"
 
-/* Функция по-умолчанию инициализации объекта анимации.
- * АРГУМЕНТЫ:
- *   - указатель на "себя" - сам объект анимации:
- *       vg4UNIT *Unit;
- *   - указатель на контекст анимации:
- *       vg4ANIM *Ani;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+/* Default Init unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
  */
-static VOID VG4_AnimUnitInit( vg4UNIT *Unit, vg4ANIM *Ani )
+static VOID EF2_AnimUnitInit( ef2UNIT *Unit, ef2ANIM *Ani )
 {
-} /* End of 'VG4_AnimUnitInit' function */
+} /* End of 'EF2_AnimUnitInit' function */
 
-/* Функция по-умолчанию деинициализации объекта анимации.
- * АРГУМЕНТЫ:
- *   - указатель на "себя" - сам объект анимации:
- *       vg4UNIT *Unit;
- *   - указатель на контекст анимации:
- *       vg4ANIM *Ani;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+/* Close unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
  */
-static VOID VG4_AnimUnitClose( vg4UNIT *Unit, vg4ANIM *Ani )
+static VOID EF2_AnimUnitClose( ef2UNIT *Unit, ef2ANIM *Ani )
 {
-} /* End of 'VG4_AnimUnitClose' function */
+} /* End of 'EF2_AnimUnitClose' function */
 
-/* Функция по-умолчанию обновления межкадровых параметров объекта анимации.
- * АРГУМЕНТЫ:
- *   - указатель на "себя" - сам объект анимации:
- *       vg4UNIT *Unit;
- *   - указатель на контекст анимации:
- *       vg4ANIM *Ani;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+/* Response unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
  */
-static VOID VG4_AnimUnitResponse( vg4UNIT *Unit, vg4ANIM *Ani )
+static VOID EF2_AnimUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
 {
-} /* End of 'VG4_AnimUnitResponse' function */
+} /* End of 'EF2_AnimUnitResponse' function */
 
-/* Функция по-умолчанию построения объекта анимации.
- * АРГУМЕНТЫ:
- *   - указатель на "себя" - сам объект анимации:
- *       vg4UNIT *Unit;
- *   - указатель на контекст анимации:
- *       vg4ANIM *Ani;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+/* Render unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
  */
-static VOID VG4_AnimUnitRender( vg4UNIT *Unit, vg4ANIM *Ani )
+static VOID EF2_AnimUnitRender( ef2UNIT *Unit, ef2ANIM *Ani )
 {
-} /* End of 'VG4_AnimUnitRender' function */
+} /* End of 'EF2_AnimUnitRender' function */
 
-/* Функция создания объекта анимации.
- * АРГУМЕНТЫ:
- *   - размер структуры объекта анимации:
+/* Create unit of animation function.
+ * ARGUMENTS:
+ *   - size to structure of animation:
  *       INT Size;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (vg4UNIT *) указатель на созданный объект анимации.
+ * RETURNS:
+ *   (ef2UNIT *) pointer to unit.
  */
-vg4UNIT * VG4_AnimUnitCreate( INT Size )
+ef2UNIT * EF2_AnimUnitCreate( INT Size )
 {
-  vg4UNIT *Unit;
+  ef2UNIT *Unit;
 
-  if (Size < sizeof(vg4UNIT) ||
+  if (Size < sizeof(ef2UNIT) ||
       (Unit = malloc(Size)) == NULL)
     return NULL;
   memset(Unit, 0, Size);
-  /* заполняем поля по-умолчанию */
+  /* Create fields by default */
   Unit->Size = Size;
-  Unit->Init = VG4_AnimUnitInit;
-  Unit->Close = VG4_AnimUnitClose;
-  Unit->Response = VG4_AnimUnitResponse;
-  Unit->Render = VG4_AnimUnitRender;
+  Unit->Init = EF2_AnimUnitInit;
+  Unit->Close = EF2_AnimUnitClose;
+  Unit->Response = EF2_AnimUnitResponse;
+  Unit->Render = EF2_AnimUnitRender;
   return Unit;
-} /* End of 'VG4_AnimUnitCreate' function */
+} /* End of 'EF2_AnimUnitCreate' function */
 
 /* END OF 'UNIT.C' FILE */
 

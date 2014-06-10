@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include "units.h"
+#include "render.h"
 
 #define WND_CLASS_NAME "My Window Class Name"
 
@@ -35,7 +36,9 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   HWND hWnd;
   MSG msg;
-  INT i;
+  MATR A = {{{10, 20 ,30 ,40}, {11, 12, 13, 14}, {15, 16, 17, 18}, {1, 2, 3, 4}}}, 
+    B = {{{10, 20 ,30 ,40}, {11, 12, 13, 14}, {15, 16, 17, 18}, {1, 2, 3, 4}}},
+    C;
 
   /* Registar of class */
   wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -69,9 +72,12 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   ShowWindow(hWnd, ShowCmd);
   UpdateWindow(hWnd);
 
+  C = EF2_MatrMult4x4(A, B);
+
   /*** Added unit ***/
-  for (i = 0; i < 30 * 30; i++)
-    EF2_AnimAddUnit(EF2_CowUnitCreate());
+  //for (i = 0; i < 30 * 30; i++)
+  //  EF2_AnimAddUnit(EF2_CowUnitCreate());
+  EF2_AnimAddUnit(EF2_GobjUnitCreate());
   EF2_AnimAddUnit(EF2_InfoUnitCreate());
 
   while (GetMessage(&msg, NULL, 0, 0))

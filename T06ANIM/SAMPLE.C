@@ -20,6 +20,14 @@ typedef struct tagef2UNIT_COW
   INT Type;             /* Type of unit */
 } ef2UNIT_COW;
 
+/* Structure of information unit */
+typedef struct tagef2UNIT_INFO
+{
+  EF2_UNIT_BASE_FIELDS; /* Base things of units */
+  IMAGE Im1, Im2;       /* Images for drawing */
+  INT PosX, PosY;
+} ef2UNIT_INFO;
+
 /* Init unit of animation function.
  * ARGUMENTS:
  *   - pointer to unit of animation:
@@ -69,11 +77,12 @@ static VOID CowUnitRender( ef2UNIT_COW *Unit, ef2ANIM *Ani )
   DBL
     x = Unit->ShiftX + sin(Ani->Time + Unit->ShiftX) * 30,
     y = Unit->ShiftY + sin(Ani->Time + Unit->ShiftY) * 30;
-
+ /*
   if (Unit->Type)
     Rectangle(Ani->hDC, x, y, x + 30, y + 30);
   else
     Ellipse(Ani->hDC, x, y, x + 30, y + 30);
+ */
 } /* End of 'EF2_AnimUnitRender' function */
 
 /* Create unit of animation function.
@@ -137,16 +146,17 @@ VOID DrawArrow( HDC hDC, INT Xc, INT Yc, INT L, INT W, FLOAT Angle )
  *       ef2ANIM *Ani;
  * RETURNS: None.
  */
-static VOID InfoUnitRender( ef2UNIT *Unit, ef2ANIM *Ani )
+static VOID InfoUnitRender( ef2UNIT_INFO *Unit, ef2ANIM *Ani )
 {
   static CHAR Buf[1000];
   static SYSTEMTIME SysTime;
 
   SetBkMode(Ani->hDC, TRANSPARENT);
   SetTextColor(Ani->hDC, RGB(255, 255, 155));
-  TextOut(Ani->hDC, 10, 10, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
+  TextOut(Ani->hDC, 10, Unit->Im1.H + 10, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
   GetSystemTime(&SysTime);
-  DrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, Ani->W / 4, 100, 3.1415 / 2 - SysTime.wMinute / 60 * 2 * 3.1415926535);
+  ImageDraw(Ani->hDC, &Unit->Im1, Unit->PosX, Unit->PosY, SRCAND);
+  ImageDraw(Ani->hDC, &Unit->Im2, Unit->PosX, Unit->PosY, SRCINVERT);
 } /* End of 'EF2_AnimUnitRender' function */
 
 
@@ -157,13 +167,16 @@ static VOID InfoUnitRender( ef2UNIT *Unit, ef2ANIM *Ani )
  */
 ef2UNIT * EF2_InfoUnitCreate( VOID )
 {
-  ef2UNIT *Unit;
+  ef2UNIT_INFO *Unit;
 
-  if ((Unit = EF2_AnimUnitCreate(sizeof(ef2UNIT))) == NULL)
+  if ((Unit = (ef2UNIT_INFO *)EF2_AnimUnitCreate(sizeof(ef2UNIT_INFO))) == NULL)
     return NULL;
+
   /* create default settings */
   Unit->Render = (VOID *)InfoUnitRender;
-  return Unit;
+  ImageLoad(&Unit->Im1, "logo_and.bmp");
+  ImageLoad(&Unit->Im2, "logo_xor.bmp");
+  return (ef2UNIT *)Unit;
 } /* End of 'EF2_InfoUnitCreate' function */
 
 /* END OF 'SAMPLE.C' FILE */

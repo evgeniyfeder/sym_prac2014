@@ -1,0 +1,178 @@
+/* FILENAME: MATR.C
+ * PROGRAMMER: EF2
+ * PURPOSE: Matrix defenition module.
+ * LAST UPDATE: 06.06.2014
+ */
+
+#include "matr.h"
+
+#define EF2_PI 3.14159265358979323846
+#define EF2_D2R(A) ((A) * (EF2_PI / 180.0))
+#define EF2_R2D(A) ((A) * (180.0 / EF2_PI))
+
+/* Unity matrix */
+MATR UnitMatrix =        
+{                        
+  {                      
+    {1, 0, 0, 0},        
+    {0, 1, 0, 0},        
+    {0, 0, 1, 0},        
+    {0, 0, 0, 1},        
+  }                      
+};                        
+
+/* Mult two matrix function.
+ * ARGUMETNS:
+ *   - two matrix for mult:
+ *       MATR A, MATR B;
+ * RETURNS:
+ *   (MATR) Matrix after mult
+ */
+MATR EF2_MatrMult4x4( MATR A, MATR B )
+{
+  MATR C;
+  INT i = 0, x = 0, y = 0;
+
+  for (y = 0; y < 4; y++)
+    for (x = 0; x < 4; x++)
+    {
+      C.A[y][x] = 0;
+      for (i = 0; i < 4; i++)
+        C.A[y][x] += A.A[i][x] * B.A[y][i]; 
+    }
+  
+  return C;
+} /* End of 'EF2_MatrMult4x4' function*/
+
+/* Mult matrix for vector function.
+ * ARGUMENTS:
+ *   - matrix for milt:
+ *       MATR A;
+ *   - vectore for mult:
+ *       VEC B;
+ * RETURNS:
+ *   (VEC) Vectore afret mult
+ */
+VEC EF2_MatrMultVec( MATR A, VEC B )
+{
+  INT i = 0;
+  VEC C;
+
+  C.X = B.X * A.A[0][0] + B.Y * A.A[1][0] + B.Z * A.A[2][0] + A.A[3][0];
+  C.Y = B.X * A.A[0][1] + B.Y * A.A[1][1] + B.Z * A.A[2][1] + A.A[3][1];
+  C.Z = B.X * A.A[0][2] + B.Y * A.A[1][2] + B.Z * A.A[2][2] + A.A[3][2];
+
+  return C;
+} /* End of 'EF2_MatrMultVec' function */
+
+/* Rotate matrix function.
+ * ARGUMENTS:
+ *   - angle:
+ *       DBL AngleInDegree;
+ *   - coordinates of center point:
+ *       DBL X, Y, Z;
+ * RETURNS:
+ *   (MATR) Result matrix;
+ */
+MATR EF2_MatrRotate( DBL AngleInDegree,
+                     DBL X, DBL Y, DBL Z )
+{
+  DBL a, si, co, len;
+  MATR m;
+
+  a = EF2_D2R(AngleInDegree);
+  si = sin(a);
+  co = cos(a);
+  len = X * X + Y * Y + Z * Z;
+  if (len != 0 && len != 1)
+    len = sqrt(len), X /= len, Y /= len, Z /= len;
+  X *= si;
+  Y *= si;
+  Z *= si;
+  m.A[0][0] = 1 - 2 * (Y * Y + Z * Z);
+  m.A[0][1] = 2 * X * Y - 2 * co * Z;
+  m.A[0][2] = 2 * co * Y + 2 * X * Z;
+  m.A[0][3] = 0;
+  m.A[1][0] = 2 * X * Y + 2 * co * Z;
+  m.A[1][1] = 1 - 2 * (X * X + Z * Z);
+  m.A[1][2] = 2 * Y * Z - 2 * co * X;
+  m.A[1][3] = 0;
+  m.A[2][0] = 2 * X * Z - 2 * co * Y;
+  m.A[2][1] = 2 * co * X + 2 * Y * Z;
+  m.A[2][2] = 1 - 2 * (X * X + Y * Y);
+  m.A[2][3] = 0;
+  m.A[3][0] = 0;
+  m.A[3][1] = 0;
+  m.A[3][2] = 0;
+  m.A[3][3] = 1;
+  return m;
+} /* End of 'EF2_MatrRotate' function */
+
+/* Get Unity Matrix function
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (MATR) Returned UnitMatrix.
+ */
+MATR MatrIdenity( VOID )
+{
+  return UnitMatrix;
+} /* End of 'MatrIdenity' function */
+
+/* Give matrix for position function.
+ * ARGUMENTS:
+ *   - vectors of position:
+ *       VEC Loc, At, Up
+ * RETURNS:
+ *   (MATR) Result matrix.
+ */
+MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up )
+{
+  VEC
+    Dir = VecSubVec(At, Loc),
+    Right = VecCrossVec(Dir, Up);
+  MATR m;
+
+  Dir = VecNormalize(Dir);
+  Right = VecNormalize(Right);
+  Up = VecCrossVec(Right, Dir);
+
+  m.A[0][0] = Right.X;
+  m.A[1][0] = Right.Y;
+  m.A[2][0] = Right.Z;
+  m.A[3][0] = -VecDotVec(Right, Loc);
+  m.A[0][1] = Up.X;
+  m.A[1][1] = Up.Y;
+  m.A[2][1] = Up.Z;
+  m.A[3][1] = -VecDotVec(Up, Loc);
+  m.A[0][2] = Dir.X;
+  m.A[1][2] = Dir.Y;
+  m.A[2][2] = Dir.Z;
+  m.A[3][2] = -VecDotVec(Dir, Loc);
+  m.A[0][3] = 0;
+  m.A[1][3] = 0;
+  m.A[2][3] = 0;
+  m.A[3][3] = 1;
+  return m;
+} /* End of 'EF2_MatrViewLookAt' function */
+
+/* Rotate matrix by Y function
+ * ARGUMENTS:
+ * RETURNS:
+ */
+__inline MATR MatrRotateY( DBL AngleInDegree )
+{
+  DBL sine, cosine, angle = EF2_D2R(AngleInDegree);
+  MATR m = MatrIdenity();
+
+  sine = sin(angle);
+  cosine = cos(angle);
+
+  m.A[0][0] = cosine;
+  m.A[2][2] = cosine;
+  m.A[2][0] = sine;
+  m.A[0][2] = -sine;
+  return m;
+} /* End of 'MatrRotateY' function */
+
+
+/* END OF 'MATR.C' FILE */

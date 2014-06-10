@@ -100,6 +100,10 @@ VOID EF2_AnimAddUnit( ef2UNIT *Unit );
 /* Create unit function */
 ef2UNIT * EF2_AnimUnitCreate( INT Size );
 
+/* Create geometric unit of animation function */
+ef2UNIT * EF2_GobjUnitCreate( VOID );
+
+
 #endif /* __ANIM_H_ */
 
 /* END OF 'ANIM.H' FILE */

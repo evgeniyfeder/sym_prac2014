@@ -112,4 +112,26 @@ DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
   return 0;
 } /* End of 'ImageGetP' function */
 
+/* Draw picture to screen.
+ * ARGUMENTS:
+ *   - hDC of screen:
+ *       HDC hDC;
+ *   - image data pointer:
+ *       IMAGE *Img;
+ *   - coordinates of picture:
+ *       INT X, Y;
+ *   - mode of drawing:
+ *       DWORD Mode;
+ * RETURNS: None.
+ */
+VOID ImageDraw( HDC hDC, IMAGE *Img, INT X, INT Y, DWORD Mode )
+{
+  HDC hMemDC = CreateCompatibleDC(hDC);
+
+  SelectObject(hMemDC, Img->hBm);
+  StretchBlt(hDC, X, Y, Img->W, Img->H, hMemDC, 0, 0, Img->W, Img->H, Mode);
+
+  DeleteDC(hMemDC);
+} /* End of 'ImageDraw' function */
+
 /* END OF 'IMAGE.C' FILE */

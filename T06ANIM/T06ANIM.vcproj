@@ -191,6 +191,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MATR.C"
+				>
+			</File>
+			<File
+				RelativePath=".\MATR.H"
+				>
+			</File>
+			<File
+				RelativePath=".\RENDER.C"
+				>
+			</File>
+			<File
+				RelativePath=".\RENDER.H"
+				>
+			</File>
+			<File
 				RelativePath=".\STARTUP.C"
 				>
 			</File>
@@ -205,6 +221,10 @@
 			<Filter
 				Name="Unit Samples"
 				>
+				<File
+					RelativePath=".\CUBE.C"
+					>
+				</File>
 				<File
 					RelativePath=".\SAMPLE.C"
 					>

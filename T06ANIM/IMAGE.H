@@ -26,6 +26,10 @@ VOID ImageFree( IMAGE *Img );
 /* Get pixel color function */
 DWORD ImageGetP( IMAGE *Img, INT X, INT Y );
 
+/* Draw picture to screen */
+VOID ImageDraw( HDC hDC, IMAGE *Img, INT X, INT Y, DWORD Mode );
+
+
 #endif /* __IMAGE_H_ */
 
 /* END OF 'IMAGE.H' FILE */

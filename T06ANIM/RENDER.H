@@ -39,7 +39,10 @@ extern DBL
 /* Matrix */
 extern MATR
   EF2_RndMatrWorld, /* Matrix of global SK */
-  EF2_RndMatrView;  /* Matrix of lokal SK */
+  EF2_RndMatrView,  /* Matrix of lokal SK */
+  EF2_RndMatrProjection; /* Projection matrix */
+
+
 
 /* From global coordinate to screen coodinates function */
 POINT EF2_RndWorldToScreen( VEC P );

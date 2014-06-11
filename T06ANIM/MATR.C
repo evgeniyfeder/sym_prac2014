@@ -57,10 +57,11 @@ VEC EF2_MatrMultVec( MATR A, VEC B )
 {
   INT i = 0;
   VEC C;
+ // DBL w = B.X * A.A[0][3] + B.Y * A.A[1][3] + B.Z * A.A[2][3] + A.A[3][3];
 
-  C.X = B.X * A.A[0][0] + B.Y * A.A[1][0] + B.Z * A.A[2][0] + A.A[3][0];
-  C.Y = B.X * A.A[0][1] + B.Y * A.A[1][1] + B.Z * A.A[2][1] + A.A[3][1];
-  C.Z = B.X * A.A[0][2] + B.Y * A.A[1][2] + B.Z * A.A[2][2] + A.A[3][2];
+  C.X = (B.X * A.A[0][0] + B.Y * A.A[1][0] + B.Z * A.A[2][0] + A.A[3][0]);// / w;
+  C.Y = (B.X * A.A[0][1] + B.Y * A.A[1][1] + B.Z * A.A[2][1] + A.A[3][1]);// / w;
+  C.Z = (B.X * A.A[0][2] + B.Y * A.A[1][2] + B.Z * A.A[2][2] + A.A[3][2]);// / w;
 
   return C;
 } /* End of 'EF2_MatrMultVec' function */
@@ -139,15 +140,15 @@ MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up )
   m.A[0][0] = Right.X;
   m.A[1][0] = Right.Y;
   m.A[2][0] = Right.Z;
-  m.A[3][0] = -VecDotVec(Right, Loc);
+  m.A[3][0] = -VecDotVec(Loc, Right);
   m.A[0][1] = Up.X;
   m.A[1][1] = Up.Y;
   m.A[2][1] = Up.Z;
   m.A[3][1] = -VecDotVec(Up, Loc);
-  m.A[0][2] = Dir.X;
-  m.A[1][2] = Dir.Y;
-  m.A[2][2] = Dir.Z;
-  m.A[3][2] = -VecDotVec(Dir, Loc);
+  m.A[0][2] = -Dir.X;
+  m.A[1][2] = -Dir.Y;
+  m.A[2][2] = -Dir.Z;
+  m.A[3][2] = VecDotVec(Dir, Loc);
   m.A[0][3] = 0;
   m.A[1][3] = 0;
   m.A[2][3] = 0;
@@ -155,11 +156,37 @@ MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up )
   return m;
 } /* End of 'EF2_MatrViewLookAt' function */
 
-/* Rotate matrix by Y function
+/* Rotate matrix by Z function.
  * ARGUMENTS:
+ *   - angle in degree:
+ *       DBL AngleInDegree;
  * RETURNS:
+ *   (MATR) Result matrix.
  */
-__inline MATR MatrRotateY( DBL AngleInDegree )
+MATR EF2_MatrRotateZ( DBL AngleInDegree )
+{
+  DBL sine, cosine, angle;
+  MATR m = MatrIdenity();
+
+  angle = EF2_D2R(AngleInDegree);
+  sine = sin(angle);
+  cosine = cos(angle);
+
+  m.A[0][0] = cosine;
+  m.A[1][1] = cosine;
+  m.A[0][1] = sine;
+  m.A[1][0] = -sine;
+  return m;
+} /* End of 'EF2_MatrRotateZ' function */
+
+/* Rotate matrix by Y function.
+ * ARGUMENTS:
+ *   - angle in degree:
+ *       DBL AngleInGegree;
+ * RETURNS:
+ *   (MATR) Result matrix.
+ */
+MATR EF2_MatrRotateY( DBL AngleInDegree )
 {
   DBL sine, cosine, angle = EF2_D2R(AngleInDegree);
   MATR m = MatrIdenity();
@@ -173,6 +200,28 @@ __inline MATR MatrRotateY( DBL AngleInDegree )
   m.A[0][2] = -sine;
   return m;
 } /* End of 'MatrRotateY' function */
+
+/* Rotate matrix by X function.
+ * ARGUMENTS:
+ *   - angle in degree:
+ *       DBL AngleInGegree;
+ * RETURNS:
+ *   (MATR) Result matrix.
+ */
+MATR EF2_MatrRotateX( DBL AngleInDegree )
+{
+  DBL sine, cosine, angle = EF2_D2R(AngleInDegree);
+  MATR m = MatrIdenity();
+
+  sine = sin(angle);
+  cosine = cos(angle);
+
+  m.A[1][1] = cosine;
+  m.A[2][2] = cosine;
+  m.A[1][2] = sine;
+  m.A[2][1] = -sine;
+  return m;
+} /* End of 'MatrRotateX' function */
 
 
 /* END OF 'MATR.C' FILE */

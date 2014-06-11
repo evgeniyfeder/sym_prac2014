@@ -28,6 +28,7 @@ typedef struct tagef2UNIT_GOBJ
 static VOID EF2_GobjUnitInit( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
   EF2_RndGObjLoad(&Unit->Obj, "cow.object");
+  EF2_RndMatrProjection = MatrProjection(-EF2_RndWp / 2, EF2_RndWp / 2, -EF2_RndHp / 2, EF2_RndHp / 2, EF2_RndProjDist, 1000);
 } /* End of 'EF2_GobjUnitInit' function */
 
 /* Close geometric unit of animation function.
@@ -55,7 +56,6 @@ static VOID EF2_GobjUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
 {
   EF2_RndWs = Ani->W;
   EF2_RndHs = Ani->H;
-  EF2_RndWp = EF2_RndHp * Ani->W / Ani->H;
 } /* End of 'EF2_GobjUnitResponse' function */
 
 /* Render unit of animation function.
@@ -68,6 +68,7 @@ static VOID EF2_GobjUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
  */
 static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
+  /*
   VEC CubeP[] = 
   {
     {0, 0, 0},   
@@ -99,12 +100,12 @@ static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
   Obj.F = F1;
   Obj.NumOfF = 12;
   Obj.NumOfV = 8;
-  EF2_RndMatrView = EF2_MatrViewLookAt(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
-
-  SetDCBrushColor(Ani->hDC, RGB(255, 255, 255));
-  SetDCPenColor(Ani->hDC, RGB(255, 255, 255));
-  
-  EF2_RndGObjDraw(&Unit->Obj, Ani->hDC);
+  */
+  EF2_RndMatrView = EF2_MatrViewLookAt(VecSet(100, 100, 100), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  EF2_RndMatrWorld = EF2_MatrRotateY(Ani->Time * 20);
+  //EF2_RndMatrWorld = EF2_MatrMult4x4(EF2_RndMatrWorld, MatrScale(0.70, 0.70, 0.70));
+  //EF2_RndMatrWorld = EF2_MatrMult4x4(MatrTranslate(0.0, 0.0, 3 * 3.30), EF2_RndMatrWorld);
+  EF2_RndGObjDraw(&Unit->Obj, Ani->hDC);  
 } /* End of 'EF2_GobjUnitRender' function */
 
 /* Create geometric unit of animation function.

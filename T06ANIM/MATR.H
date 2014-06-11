@@ -157,11 +157,71 @@ __inline VEC VecNormalize( VEC V )
 /* Get Unity Matrix function */
 MATR MatrIdenity( VOID );
 
+/* Scale matrix function.
+ * ARGUMENTS:
+ *   - scaled coff:
+ *       DBL Sx, Sy, Sz;
+ * RETURNS:
+ *   (MATR) Result matrix.
+ */
+__inline MATR MatrScale( DBL Sx, DBL Sy, DBL Sz )
+{
+  MATR m = MatrIdenity();
+
+  m.A[0][0] = Sx;
+  m.A[1][1] = Sy;
+  m.A[2][2] = Sz;
+  return m;
+} /* End of 'MatrScale' function */
+
+/* Translate matrix function.
+ * ARGUMENTS:
+ *   - numvers for translate:
+ *       DBL Dx, Dy, Dz;
+ * RETURNS:
+ *   (MATR) Result matrix.
+ */
+__inline MATR MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
+{
+  MATR m = MatrIdenity();
+
+  m.A[3][0] = Dx;
+  m.A[3][1] = Dy;
+  m.A[3][2] = Dz;
+  return m;
+} /* End of 'MatrTranslate' function */
+
+__inline MATR MatrProjection( DBL Left, DBL Right,
+                              DBL Bottom, DBL Top,
+                              DBL Near, DBL Far )
+{
+  MATR m =
+  {
+    {
+      {      2 * Near / (Right - Left),                               0,                              0,  0},
+      {                              0,       2 * Near / (Top - Bottom),                              0,  0},
+      {(Right + Left) / (Right - Left), (Top + Bottom) / (Top - Bottom),   -(Far + Near) / (Far - Near), -1},
+      {                              0,                               0, -2 * Near * Far / (Far - Near),  0}
+    }
+  };
+  return m;
+} /* End of 'MatrProjection' function */
+
 /* Mult matrix for vector function */
 VEC EF2_MatrMultVec( MATR A, VEC B );
 
 /* Give matrix for position function */
 MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up );
+
+/* Rotate matrix by Y function */
+MATR EF2_MatrRotateY( DBL AngleInDegree );
+
+/* Rotate matrix by Z function */
+MATR EF2_MatrRotateZ( DBL AngleInDegree );
+
+/* Rotate matrix by X function */
+MATR EF2_MatrRotateX( DBL AngleInDegree );
+
 
 #endif /* __MATR_H_ */
 

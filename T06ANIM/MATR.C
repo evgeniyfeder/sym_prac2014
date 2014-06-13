@@ -38,7 +38,7 @@ MATR EF2_MatrMult4x4( MATR A, MATR B )
     {
       C.A[y][x] = 0;
       for (i = 0; i < 4; i++)
-        C.A[y][x] += A.A[i][x] * B.A[y][i]; 
+        C.A[y][x] += A.A[y][i] * B.A[i][x]; 
     }
   
   return C;

@@ -17,6 +17,8 @@ typedef struct tagef2UNIT_GOBJ
   ef2GOBJ Obj;           /* Geometric object */
 } ef2UNIT_GOBJ;
 
+ef2CAMERA EF2_RndCam;
+
 /* Init geometric unit of animation function.
  * ARGUMENTS:
  *   - pointer for animation:
@@ -52,10 +54,19 @@ static VOID EF2_GobjUnitClose( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
  *       ef2ANIM *Ani;
  * RETURNS: None.
  */
-static VOID EF2_GobjUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
+static VOID EF2_GobjUnitResponse( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
   EF2_RndWs = Ani->W;
   EF2_RndHs = Ani->H;
+  GetKeyboardState(Ani->Keys);
+  if (Ani->Keys['W'] & 0x80)
+    EF2_RndCam.At.Y += 1;
+  else if (Ani->Keys['S'] & 0x80)
+    EF2_RndCam.At.Y -= 1;
+  else if (Ani->Keys['A'] & 0x80)
+    EF2_RndCam.At.X -= 1;
+  else if (Ani->Keys['D'] & 0x80)
+    EF2_RndCam.At.X += 1;
 } /* End of 'EF2_GobjUnitResponse' function */
 
 /* Render unit of animation function.
@@ -101,11 +112,17 @@ static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
   Obj.NumOfF = 12;
   Obj.NumOfV = 8;
   */
-  EF2_RndMatrView = EF2_MatrViewLookAt(VecSet(100, 100, 100), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  EF2_RndMatrView = EF2_MatrViewLookAt(EF2_RndCam.At, VecSet(0, 0, 0), VecSet(0, 1, 0));
+  //EF2_RndMatrView = EF2_MatrMult4x4(EF2_RndMatrView, EF2_MatrRotateY(Ani->Time * 10));
   EF2_RndMatrWorld = EF2_MatrRotateY(Ani->Time * 20);
-  //EF2_RndMatrWorld = EF2_MatrMult4x4(EF2_RndMatrWorld, MatrScale(0.70, 0.70, 0.70));
+  EF2_RndMatrWorld = EF2_MatrMult4x4(MatrScale(0.10, 0.10, 0.10), EF2_RndMatrWorld);
   //EF2_RndMatrWorld = EF2_MatrMult4x4(MatrTranslate(0.0, 0.0, 3 * 3.30), EF2_RndMatrWorld);
-  EF2_RndGObjDraw(&Unit->Obj, Ani->hDC);  
+  EF2_RndGObjDraw(&Unit->Obj, Ani->hDC);
+
+  EF2_RndMatrWorld = EF2_MatrRotateY(Ani->Time * 20);
+  EF2_RndMatrWorld = EF2_MatrMult4x4(MatrScale(0.10, 0.10, 0.10), EF2_RndMatrWorld);
+  EF2_RndMatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 0, 10), EF2_RndMatrWorld);
+  EF2_RndGObjDraw(&Unit->Obj, Ani->hDC);
 } /* End of 'EF2_GobjUnitRender' function */
 
 /* Create geometric unit of animation function.

@@ -150,7 +150,6 @@ static VOID InfoUnitRender( ef2UNIT_INFO *Unit, ef2ANIM *Ani )
 {
   static CHAR Buf[1000];
   static SYSTEMTIME SysTime;
-
   SetBkMode(Ani->hDC, TRANSPARENT);
   SetTextColor(Ani->hDC, RGB(255, 255, 155));
   TextOut(Ani->hDC, 10, Unit->Im1.H + 10, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));

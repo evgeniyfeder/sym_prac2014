@@ -137,7 +137,7 @@ BOOL EF2_RndGObjLoad( ef2GOBJ *GObj, CHAR *FileName )
     if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-      GObj->V[nv++] = VecSet(x, y, z + 6);
+      GObj->V[nv++] = VecSet(x, y, z);
     }
     else if (Buf[0] == 'f' && Buf[1] == ' ')
     {

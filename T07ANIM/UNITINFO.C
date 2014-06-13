@@ -1,0 +1,160 @@
+/* FILENAME: UNITINFO.C
+ * PROGRAMMER: EF2
+ * PURPOSE: Information unit handle module.
+ * LAST UPDATE: 13.06.2014
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#include "anim.h"
+
+/* Information type of unit */
+typedef struct tagef2UNIT_INFO
+{
+  EF2_UNIT_BASE_FIELDS; /* Base fields */
+} ef2UNIT_INFO;
+
+/* Init information unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
+ */
+static VOID InfoUnitInit( ef2UNIT *Unit, ef2ANIM *Ani )
+{
+} /* End of 'EF2_AnimUnitInit' function */
+
+/* Close information unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
+ */
+static VOID InfoUnitClose( ef2UNIT *Unit, ef2ANIM *Ani )
+{
+} /* End of 'EF2_InfoUnitClose' function */
+
+/* Response information unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
+ */
+static VOID InfoUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
+{
+  if (Ani->Keys['F'])
+    EF2_AnimFlipFullScreen();
+  if (Ani->KeysClick['P'])
+    EF2_AnimSetPause(!Ani->IsPause);
+  if (Ani->Keys[VK_ESCAPE])
+    DestroyWindow(Ani->hWnd);
+  if (Ani->Keys[VK_ADD])
+    Ani->ProjSize += 0.01;
+} /* End of 'EF2_InfoUnitResponse' function */
+
+/* Render information unit of animation function.
+ * ARGUMENTS:
+ *   - pointer for animation:
+ *       ef2UNIT *Unit;
+ *   - pointer to animation:
+ *       ef2ANIM *Ani;
+ * RETURNS: None.
+ */
+static VOID InfoUnitRender( ef2UNIT *Unit, ef2ANIM *Ani )
+{
+  static CHAR Buf[1000];
+  int i = 0;
+
+  sprintf(Buf, "FPS: %.3f", Ani->FPS);
+  SetWindowText(Ani->hWnd, Buf);
+ 
+  glBegin(GL_LINES);
+    /* + */
+    glColor3d(1, 0, 0);
+    glVertex3d(0, 0, 0);
+    glVertex4d(1, 0, 0, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(i, 0, 0);
+      glVertex3d(i, 0.25, 0);
+    }
+
+    glColor3d(0, 1, 0);
+    glVertex3d(0, 0, 0);
+    glVertex4d(0, 1, 0, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(0, i, 0);
+      glVertex3d(0, i, 0.25);
+    }
+
+    glColor3d(0, 0, 1);
+    glVertex3d(0, 0, 0);
+    glVertex4d(0, 0, 1, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(0, 0, i);
+      glVertex3d(0, 0.25, i);
+    }
+    /* - */
+    glColor3d(1, 0, 0);
+    glVertex3d(0, 0, 0);
+    glVertex4d(-1, 0, 0, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(-i, 0, 0);
+      glVertex3d(-i, -0.25, 0);
+    }
+
+    glColor3d(0, 1, 0);
+    glVertex3d(0, 0, 0);
+    glVertex4d(0, -1, 0, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(0, -i, 0);
+      glVertex3d(0, -i, -0.25);
+    }
+
+    glColor3d(0, 0, 1);
+    glVertex3d(0, 0, 0);
+    glVertex4d(0, 0, -1, 0);
+    for (i = 1; i < 5; i++)
+    {
+      glVertex3d(0, 0, -i);
+      glVertex3d(0, -0.25, -i);
+    }
+
+  glEnd();
+} /* End of 'InfoUnitRender' function */
+
+/* Create information unit of animation function.
+ * ARGUMENTS:
+ *   - size to structure of animation:
+ *       INT Size;
+ * RETURNS:
+ *   (ef2UNIT *) pointer to unit.
+ */
+ef2UNIT * EF2_InfoUnitCreate( VOID )
+{
+  ef2UNIT_INFO *Unit;
+
+  if ((Unit = (ef2UNIT_INFO *)EF2_AnimUnitCreate(sizeof(ef2UNIT_INFO))) == NULL)
+    return NULL;
+  /* Create fields by default */
+  Unit->Init = (VOID *)InfoUnitInit;
+  Unit->Close = (VOID *)InfoUnitClose;
+  Unit->Response = (VOID *)InfoUnitResponse;
+  Unit->Render = (VOID *)InfoUnitRender;
+  return (ef2UNIT *)Unit;
+} /* End of 'EF2_AnimUnitCreate' function */
+
+/* END OF 'UNITINFO.C' FILE */

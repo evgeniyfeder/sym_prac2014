@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #include "anim.h"
-#include "render.h"
+#pragma warning(disable: 4244 4305)
 
 /* Unit for geometric object data type */
 typedef struct tagef2UNIT_GOBJ
@@ -71,7 +71,8 @@ static VOID EF2_GobjUnitResponse( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
   static MATR EF2_RndMatrWorldViewProj;
-  int i = 0;
+  INT i = 0, loc = 0;
+  static DBL time = 0;
   
   EF2_RndMatrWorldViewProj = MatrIdenity();
   Ani->MatrView = EF2_MatrViewLookAt(EF2_MatrMultVec(EF2_MatrRotateX(5 * Ani->CountY), VecSet(10, 10, Ani->CountX + 15)), VecSet(0, 0, 0), VecSet(0, 1, 0));
@@ -82,23 +83,43 @@ static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
   EF2_RndMatrWorldViewProj =
     EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
       Ani->MatrProjection);
-  glLoadMatrixd(&EF2_RndMatrWorldViewProj.A[0][0]);
+  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
+
+  time += Ani->GlobalDeltaTime;
+  if (time > 1)
+  {
+    time = 0;
+    EF2_ShadProgClose(EF2_ShaderProg);
+    EF2_ShaderProg = EF2_ShadProgInit("a.vert", "a.frag");
+  }
+ 
+  /* выбор программы шейдеров вывода примитивов */
+  glEnable(GL_DEPTH_TEST);
+  glUseProgram(EF2_ShaderProg);
+  loc = glGetUniformLocation(EF2_ShaderProg, "Matr");
+  if (loc != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, EF2_RndMatrWorldViewProj.A[0]);
+  loc = glGetUniformLocation(EF2_ShaderProg, "Time");
+  if (loc != -1)
+    glUniform1f(loc, Ani->Time);
+
   EF2_RndGObjDraw(&Unit->Obj[0], Ani->hDC);
 
-  
+  /*
   Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 0, 10), Ani->MatrWorld);
   EF2_RndMatrWorldViewProj =
     EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
       Ani->MatrProjection);
-  glLoadMatrixd(&EF2_RndMatrWorldViewProj.A[0][0]);
+  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
   EF2_RndGObjDraw(&Unit->Obj[0], Ani->hDC);
-  
-  Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 0, -10), Ani->MatrWorld);
+  */
+  //Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 10 * sin(Ani->Time), -10), Ani->MatrWorld);
 
   EF2_RndMatrWorldViewProj =
     EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
       Ani->MatrProjection);
-  glLoadMatrixd(&EF2_RndMatrWorldViewProj.A[0][0]);
+  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
+  glUseProgram(0);
 } /* End of 'EF2_GobjUnitRender' function */
 
 /* Create geometric unit of animation function.

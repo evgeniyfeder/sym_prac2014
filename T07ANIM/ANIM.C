@@ -38,6 +38,8 @@ static INT
 /* deskriptor for mouse message */
 static HHOOK EF2_hMouseHook;
 
+UINT EF2_ShaderProg;
+
 /* Catch message of mouse function
  * ARGUMENTS:
  *   - code of catch:
@@ -298,6 +300,7 @@ VOID EF2_AnimRender( VOID )
   /* clean brush */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glClear(GL_DEPTH_BUFFER_BIT);
   /* draw of units */
   for (i = 0; i < EF2_Anim.NumOfUnits; i++)
     EF2_Anim.Units[i]->Render(EF2_Anim.Units[i], &EF2_Anim);

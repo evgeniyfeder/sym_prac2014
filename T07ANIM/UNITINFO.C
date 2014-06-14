@@ -58,7 +58,9 @@ static VOID InfoUnitResponse( ef2UNIT *Unit, ef2ANIM *Ani )
   if (Ani->Keys[VK_ESCAPE])
     DestroyWindow(Ani->hWnd);
   if (Ani->Keys[VK_ADD])
-    Ani->ProjSize += 0.01;
+    Ani->ProjSize += 0.1;
+  if (Ani->Keys[VK_SUBTRACT])
+    Ani->ProjSize -= 0.1;
 } /* End of 'EF2_InfoUnitResponse' function */
 
 /* Render information unit of animation function.

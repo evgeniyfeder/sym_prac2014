@@ -5,7 +5,7 @@
  */
 
 #include "matr.h"
-
+#pragma warning(disable: 4244 4305)
 
 /* Unity matrix */
 MATR UnitMatrix =        
@@ -54,7 +54,7 @@ VEC EF2_MatrMultVec( MATR A, VEC B )
 {
   INT i = 0;
   VEC C;
- // DBL w = B.X * A.A[0][3] + B.Y * A.A[1][3] + B.Z * A.A[2][3] + A.A[3][3];
+ // FLT w = B.X * A.A[0][3] + B.Y * A.A[1][3] + B.Z * A.A[2][3] + A.A[3][3];
 
   C.X = (B.X * A.A[0][0] + B.Y * A.A[1][0] + B.Z * A.A[2][0] + A.A[3][0]);// / w;
   C.Y = (B.X * A.A[0][1] + B.Y * A.A[1][1] + B.Z * A.A[2][1] + A.A[3][1]);// / w;
@@ -66,16 +66,16 @@ VEC EF2_MatrMultVec( MATR A, VEC B )
 /* Rotate matrix function.
  * ARGUMENTS:
  *   - angle:
- *       DBL AngleInDegree;
+ *       FLT AngleInDegree;
  *   - coordinates of center point:
- *       DBL X, Y, Z;
+ *       FLT X, Y, Z;
  * RETURNS:
  *   (MATR) Result matrix;
  */
-MATR EF2_MatrRotate( DBL AngleInDegree,
-                     DBL X, DBL Y, DBL Z )
+MATR EF2_MatrRotate( FLT AngleInDegree,
+                     FLT X, FLT Y, FLT Z )
 {
-  DBL a, si, co, len;
+  FLT a, si, co, len;
   MATR m;
 
   a = EF2_D2R(AngleInDegree);
@@ -156,13 +156,13 @@ MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up )
 /* Rotate matrix by Z function.
  * ARGUMENTS:
  *   - angle in degree:
- *       DBL AngleInDegree;
+ *       FLT AngleInDegree;
  * RETURNS:
  *   (MATR) Result matrix.
  */
-MATR EF2_MatrRotateZ( DBL AngleInDegree )
+MATR EF2_MatrRotateZ( FLT AngleInDegree )
 {
-  DBL sine, cosine, angle;
+  FLT sine, cosine, angle;
   MATR m = MatrIdenity();
 
   angle = EF2_D2R(AngleInDegree);
@@ -179,13 +179,13 @@ MATR EF2_MatrRotateZ( DBL AngleInDegree )
 /* Rotate matrix by Y function.
  * ARGUMENTS:
  *   - angle in degree:
- *       DBL AngleInGegree;
+ *       FLT AngleInGegree;
  * RETURNS:
  *   (MATR) Result matrix.
  */
-MATR EF2_MatrRotateY( DBL AngleInDegree )
+MATR EF2_MatrRotateY( FLT AngleInDegree )
 {
-  DBL sine, cosine, angle = EF2_D2R(AngleInDegree);
+  FLT sine, cosine, angle = EF2_D2R(AngleInDegree);
   MATR m = MatrIdenity();
 
   sine = sin(angle);
@@ -201,13 +201,13 @@ MATR EF2_MatrRotateY( DBL AngleInDegree )
 /* Rotate matrix by X function.
  * ARGUMENTS:
  *   - angle in degree:
- *       DBL AngleInGegree;
+ *       FLT AngleInGegree;
  * RETURNS:
  *   (MATR) Result matrix.
  */
-MATR EF2_MatrRotateX( DBL AngleInDegree )
+MATR EF2_MatrRotateX( FLT AngleInDegree )
 {
-  DBL sine, cosine, angle = EF2_D2R(AngleInDegree);
+  FLT sine, cosine, angle = EF2_D2R(AngleInDegree);
   MATR m = MatrIdenity();
 
   sine = sin(angle);

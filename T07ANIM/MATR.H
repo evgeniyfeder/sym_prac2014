@@ -13,6 +13,7 @@
 #define EF2_PI 3.14159265358979323846
 #define EF2_D2R(A) ((A) * (EF2_PI / 180.0))
 #define EF2_R2D(A) ((A) * (180.0 / EF2_PI))
+#pragma warning(disable: 4244 4305)
 
 /* Common float point types */
 typedef float FLT;
@@ -21,13 +22,13 @@ typedef double DBL;
 /* Main vector data type */
 typedef struct tagVEC
 {
-  DBL X, Y, Z; /* Vector information */
+  FLT X, Y, Z; /* Vector information */
 } VEC;
 
 /* Main matrix data type */
 typedef struct tagMATR
 {
-  DBL A[4][4];  /* Matrix information */
+  FLT A[4][4];  /* Matrix information */
 } MATR;
 
 /* Mult two matrix function */
@@ -36,11 +37,11 @@ MATR EF2_MatrMult4x4( MATR A, MATR B );
 /* Create vector function.
  * ARGUMENTS:
  *   - coordinates of vector:
- *       DBL X, Y, Z;
+ *       FLT X, Y, Z;
  * RETURNS:
  *   (VEC) Vector in his data type.
  */
-__inline VEC VecSet( DBL X, DBL Y, DBL Z )
+__inline VEC VecSet( FLT X, FLT Y, FLT Z )
 {
   VEC v;
 
@@ -87,7 +88,7 @@ __inline VEC VecSubVec( VEC V1, VEC V2 )
  * RETURNS:
  *   (VEC) Result vector.
  */
-__inline VEC VecMulNum( VEC V, DBL N )
+__inline VEC VecMulNum( VEC V, FLT N )
 {
   return VecSet(V.X * N, V.Y * N, V.Z * N);
 } /* End of 'VecMulNum' function */
@@ -101,7 +102,7 @@ __inline VEC VecMulNum( VEC V, DBL N )
  * RETURNS:
  *   (VEC) Result vector.
  */
-__inline VEC VecDivNum( VEC V, DBL N )
+__inline VEC VecDivNum( VEC V, FLT N )
 {
   return VecSet(V.X / N, V.Y / N, V.Z / N);
 } /* End of 'VecDivNum' function */
@@ -123,9 +124,9 @@ __inline VEC VecNeg( VEC V )
  *   - vectors for action:
  *       VEC V1, V2;
  * RETURNS:
- *   (DBL) Result number.
+ *   (FLT) Result number.
  */
-__inline DBL VecDotVec( VEC V1, VEC V2 )
+__inline FLT VecDotVec( VEC V1, VEC V2 )
 {
   return V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 } /* End of 'VecDotVec' function */
@@ -153,7 +154,7 @@ __inline VEC VecCrossVec( VEC V1, VEC V2 )
  */
 __inline VEC VecNormalize( VEC V )
 {
-  DBL len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
+  FLT len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
   if (len != 0 && len != 1)
   {
     len = sqrt(len);
@@ -168,11 +169,11 @@ MATR MatrIdenity( VOID );
 /* Scale matrix function.
  * ARGUMENTS:
  *   - scaled coff:
- *       DBL Sx, Sy, Sz;
+ *       FLT Sx, Sy, Sz;
  * RETURNS:
  *   (MATR) Result matrix.
  */
-__inline MATR MatrScale( DBL Sx, DBL Sy, DBL Sz )
+__inline MATR MatrScale( FLT Sx, FLT Sy, FLT Sz )
 {
   MATR m = MatrIdenity();
 
@@ -185,11 +186,11 @@ __inline MATR MatrScale( DBL Sx, DBL Sy, DBL Sz )
 /* Translate matrix function.
  * ARGUMENTS:
  *   - numvers for translate:
- *       DBL Dx, Dy, Dz;
+ *       FLT Dx, Dy, Dz;
  * RETURNS:
  *   (MATR) Result matrix.
  */
-__inline MATR MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
+__inline MATR MatrTranslate( FLT Dx, FLT Dy, FLT Dz )
 {
   MATR m = MatrIdenity();
 
@@ -199,9 +200,9 @@ __inline MATR MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
   return m;
 } /* End of 'MatrTranslate' function */
 
-__inline MATR MatrProjection( DBL Left, DBL Right,
-                              DBL Bottom, DBL Top,
-                              DBL Near, DBL Far )
+__inline MATR MatrProjection( FLT Left, FLT Right,
+                              FLT Bottom, FLT Top,
+                              FLT Near, FLT Far )
 {
   MATR m =
   {
@@ -222,13 +223,13 @@ VEC EF2_MatrMultVec( MATR A, VEC B );
 MATR EF2_MatrViewLookAt( VEC Loc, VEC At, VEC Up );
 
 /* Rotate matrix by Y function */
-MATR EF2_MatrRotateY( DBL AngleInDegree );
+MATR EF2_MatrRotateY( FLT AngleInDegree );
 
 /* Rotate matrix by Z function */
-MATR EF2_MatrRotateZ( DBL AngleInDegree );
+MATR EF2_MatrRotateZ( FLT AngleInDegree );
 
 /* Rotate matrix by X function */
-MATR EF2_MatrRotateX( DBL AngleInDegree );
+MATR EF2_MatrRotateX( FLT AngleInDegree );
 
 
 #endif /* __MATR_H_ */

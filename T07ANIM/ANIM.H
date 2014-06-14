@@ -7,7 +7,9 @@
 #ifndef __ANIM_H_
 #define __ANIM_H_
 
+#include "render.h"
 #include "image.h"
+#include "shader.h"
 
 /* maximum of units in animation */
 #define EF2_MAX_UNITS 3000
@@ -95,6 +97,7 @@ struct tagef2UNIT
   EF2_UNIT_BASE_FIELDS; /* Base fields */
 };
 
+extern UINT EF2_ShaderProg;
 /***
  * Work with animation module of function
  ***/

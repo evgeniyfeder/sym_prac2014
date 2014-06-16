@@ -17,7 +17,7 @@
   ((INT)(EF2_JOYSTICK_THRESHOLD * (2.0 * (ji.dw ## A ## pos - jc.w ## A ## min) / (jc.w ## A ## max - jc.w ## A ##min - 1) - 1) + 0.5) / EF2_JOYSTICK_THRESHOLD)
 
 /* System contecs of animation */
-static ef2ANIM EF2_Anim;
+ef2ANIM EF2_Anim;
 
 /* Data for sinhronize time */
 static INT64
@@ -131,6 +131,7 @@ BOOL EF2_AnimInit( HWND hWnd )
     EF2_Anim.MatrView = 
     EF2_Anim.MatrProjection = MatrIdenity();
   EF2_Anim.ProjSize = 1;
+  EF2_Anim.PosCam.X = EF2_Anim.PosCam.Y = EF2_Anim.PosCam.Z = 25;
   /* Init mouse hook */
   EF2_hMouseHook = SetWindowsHookEx(WH_MOUSE_LL, EF2_MouseHook, GetModuleHandle(NULL), 0);
   return TRUE;
@@ -299,7 +300,7 @@ VOID EF2_AnimRender( VOID )
 
   /* clean brush */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+  glClearColor(0.3, 0.5, 0.7, 1);
   glClear(GL_DEPTH_BUFFER_BIT);
   /* draw of units */
   for (i = 0; i < EF2_Anim.NumOfUnits; i++)

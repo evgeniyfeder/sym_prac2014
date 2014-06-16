@@ -72,6 +72,8 @@ typedef struct tagef2ANIM
   VEC PosCam; /* Position of camera vector data */
 } ef2ANIM;
 
+extern ef2ANIM EF2_Anim;
+
 /* Base fields of unit:
  * - size of unit
  *     INT Size;

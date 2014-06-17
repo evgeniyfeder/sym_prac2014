@@ -135,6 +135,8 @@ VOID EF2_AnimAddUnit( ef2UNIT *Unit );
 /* Create unit function */
 ef2UNIT * EF2_AnimUnitCreate( INT Size );
 
+ef2UNIT * EF2_PlansUnitCreate( VOID );
+
 #endif /* __ANIM_H_ */
 
 /* END OF 'ANIM.H' FILE */

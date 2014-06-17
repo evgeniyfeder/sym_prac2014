@@ -138,6 +138,89 @@ VOID EF2_PrimFree( ef2PRIM *P )
   memset(P, 0, sizeof(ef2PRIM));
 } /* End of 'EF2_PrimFree' function */
 
+/* Функция создания карты высот.
+ * АРГУМЕНТЫ:
+ *   - создаваемый примитив:
+ *       ef2PRIM *P;
+ *   - растровое изображение с высотами:
+ *       CHAR *FileName;
+ *   - максимальная высота и масштабирование:
+ *       FLT Height, Scale;
+ * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
+ *   (BOOL) TRUE при успехе.
+ */
+BOOL EF2_PrimCreateHeightField( ef2PRIM *P, CHAR *FileName, FLT Height, FLT Scale )
+{
+  INT i, j;
+  IMAGE Img;
+
+  memset(P, 0, sizeof(ef2PRIM));
+  if (!ImageLoad(&Img, FileName))
+    return FALSE;
+
+  if (!EF2_PrimCreate(P, EF2_PRIM_GRID, Img.W, Img.H))
+    return FALSE;
+  /* задаем координаты точек */
+  for (i = 0; i < Img.H; i++)
+    for (j = 0; j < Img.W; j++)
+    {
+      ef2VERTEX *V = P->V + i * Img.W + j;
+      BYTE rgb[4], h;
+      DWORD *col = (DWORD *)rgb;
+
+      *col = ImageGetP(&Img, j, i);
+      h = (rgb[2] * 30 + rgb[1] * 59 + rgb[0] * 11) / 100;
+      V->P = VecSet((j - Img.W / 2) / Scale, h * Height / 255, (i - Img.H / 2) / Scale);
+    }
+  /* задаем нормали точек */
+  for (i = 1; i < Img.H - 1; i++)
+    for (j = 1; j < Img.W - 1; j++)
+    {
+      VEC
+        p00 = P->V[i * Img.W + j].P,
+        p0_1 = P->V[i * Img.W + (j - 1)].P,
+        p01 = P->V[i * Img.W + (j + 1)].P,
+        p_10 = P->V[(i - 1) * Img.W + j].P,
+        p10 = P->V[(i + 1) * Img.W + j].P,
+        du0 = VecNormalize(VecSet((p0_1.Y - p00.Y), (p00.X - p0_1.X), 0)),
+        du1 = VecNormalize(VecSet((p00.Y - p01.Y), (p01.X - p00.X), 0)),
+        dv0 = VecNormalize(VecSet(0, (p00.Z - p_10.Z), (p_10.Y - p00.Y))),
+        dv1 = VecNormalize(VecSet(0, (p10.Z - p00.Z), (p00.Y - p10.Y)));
+
+      P->V[i * Img.W + j].N = VecNormalize(VecAddVec(VecAddVec(du0, du1), VecAddVec(dv0, dv1)));
+      /// P->V[i * Img.W + j].N = VecNormalize(VecAddVec(du0, du1));
+    }
+  return TRUE;
+} /* End of 'EF2_PrimCreateSphere' function */
+
+/* Функция создания плоскости.
+ * АРГУМЕНТЫ:
+ *   - создаваемый примитив:
+ *       ef2PRIM *P;
+ *   - размер плоскости:
+ *       FLT PlantSize;
+ * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
+ *   (BOOL) TRUE при успехе.
+ */
+BOOL EF2_PrimCreatePlane( ef2PRIM *P, VEC V1, VEC V2, VEC V3, VEC V4, VEC N, INT TexNum )
+{
+
+  if (!EF2_PrimCreate(P, EF2_PRIM_GRID, 2, 2))
+    return FALSE;
+
+  P->V[0].P = V1;
+  P->V[1].P = V2;
+  P->V[2].P = V3;
+  P->V[3].P = V4;
+  P->V[0].N = P->V[1].N = P->V[2].N = P->V[3].N = N;
+  P->V[0].T = EF2_UVSet(0, 0);
+  P->V[1].T = EF2_UVSet(TexNum, 0);
+  P->V[2].T = EF2_UVSet(0, TexNum);
+  P->V[3].T = EF2_UVSet(TexNum, TexNum);
+  return TRUE;
+} /* End of 'EF2_PrimCreateSphere' function */
+
+
 /* Функция отрисовки примитива.
  * АРГУМЕНТЫ:
  *   - примитив:
@@ -206,8 +289,10 @@ VOID EF2_PrimDraw( ef2PRIM *P )
         glVertex3fv(&P->V[start + P->I[j]].P.X);
       glEnd();
       */
-      glDrawElements(GL_TRIANGLE_STRIP, P->NumOfI, GL_UNSIGNED_INT,
-        (VOID *)(i * P->GW * 2 * sizeof(INT)));
+      glDrawElementsBaseVertex(GL_TRIANGLE_STRIP,
+        P->NumOfI, GL_UNSIGNED_INT, (VOID *)0,
+        i * P->GW);
+
     }
   }
   glUseProgram(0);

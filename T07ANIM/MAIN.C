@@ -74,6 +74,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   //  EF2_AnimAddUnit(EF2_CowUnitCreate());
   EF2_AnimAddUnit(EF2_GobjUnitCreate());
   EF2_AnimAddUnit(EF2_InfoUnitCreate());
+  // EF2_AnimAddUnit(EF2_PlansUnitCreate());
   while (TRUE)
     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {

@@ -220,5 +220,4 @@ MATR EF2_MatrRotateX( FLT AngleInDegree )
   return m;
 } /* End of 'MatrRotateX' function */
 
-
 /* END OF 'MATR.C' FILE */

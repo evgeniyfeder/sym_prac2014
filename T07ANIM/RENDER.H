@@ -78,18 +78,18 @@ typedef struct tagef2PRIM
 {
   ef2PRIM_TYPE Type; /* тип примитива */
   INT
-    NumOfV,     /* количество вершин */
-    NumOfI,     /* количество индексов */
-    GW, GH,     /* размер сетки */
-    Mtl,        /* номер материала */
-    Size;       /* размер выделенной памяти в байтах */
-  ef2VERTEX *V; /* массив вершин */
-  INT *I;       /* массив индексов */
+    NumOfV,          /* количество вершин */
+    NumOfI,          /* количество индексов */
+    GW, GH,          /* размер сетки */
+    Mtl,             /* номер материала */
+    Size;            /* размер выделенной памяти в байтах */
+  ef2VERTEX *V;      /* массив вершин */
+  INT *I;            /* массив индексов */
 
   /* Данные для вывода в OpenGL */
   INT
-    Buffers[2],    /* Буфер вершин и индексов */
-    VertexBuffer;  /* Буфер описания вершин */
+    Buffers[2],      /* Буфер вершин и индексов */
+    VertexBuffer;    /* Буфер описания вершин */
 } ef2PRIM;
 
 /* Цвет по-умолчанию */
@@ -102,6 +102,9 @@ BOOL EF2_PrimCreate( ef2PRIM *P, ef2PRIM_TYPE Type,
 /* Функция создания сферы */
 BOOL EF2_PrimCreateSphere( ef2PRIM *P,
        VEC C, FLT R, INT M, INT N );
+
+/* Функция создания плоскости */
+BOOL EF2_PrimCreatePlane( ef2PRIM *P, VEC V1, VEC V2, VEC V3, VEC V4, VEC N, INT TexNum);
 
 /* Функция удаления примитива */
 VOID EF2_PrimFree( ef2PRIM *P );

@@ -31,59 +31,17 @@ static UINT TexNo1, TexNo2;
  */
 static VOID EF2_GobjUnitInit( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
-  ef2PRIM Pr[6] = {0};
-  ef2MATERIAL Mtl[2] = {0};
-  UINT TexNo = 0;
+  INT a = 10;
   if ((Unit->Obj = malloc(sizeof(ef2GEOM))) == NULL)
     return;
   memset(&Unit->Obj[0], 0, sizeof(ef2GEOM));
   //EF2_GeomLoad(&Unit->Obj[0], "Z:\\SUM2014\\T07ANIM\\x6\\x6.object");
-  //EF2_RndGObjLoad(&Unit->Obj[1], "avent.object");
+  //EF2_RndG
+  //ObjLoad(&Unit->Obj[1], "avent.object");
   //EF2_GeomLoad(&Unit->Obj[0], "Z:\\SUM2014\\T07ANIM\\houses\\house1.object");
   //EF2_GeomLoad(&Unit->Box, "Z:\\SUM2014\\T07ANIM\\Models\\Cube\\cube.object");
-  EF2_PrimCreatePlane(&Pr[0], VecSet(-100, 0, -100), VecSet(100, 0, -100), VecSet(-100, 0, 100), VecSet(100, 0, 100), VecSet(0, 1, 0), 20);
-
-  /* Create material for planes */
-  Mtl[0].Trans = 1;
-  Mtl[0].Phong = 30;
-  Mtl[0].Ka = VecSet(0.1, 0.1, 0.1);
-  Mtl[0].Kd = VecSet(1, 1, 1);
-  Mtl[0].Ks = VecSet(0, 0, 0);
-  strcpy(Mtl[0].MapD, "Z:\\SUM2014\\T07ANIM\\Textures\\e1.bmp");
-  strcpy(Mtl[0].Name, "Plane Field Material");
-  TexNo1 = Pr[0].Mtl = EF2_GeomAddMaterial(&Unit->Obj[0], &Mtl[0]);
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[0]);
-
-  
-  Mtl[1].Trans = 1;
-  Mtl[1].Phong = 30;
-  Mtl[1].Ka = VecSet(0.1, 0.1, 0.1);
-  Mtl[1].Kd = VecSet(1, 1, 1);
-  Mtl[1].Ks = VecSet(0, 0, 0);
-  strcpy(Mtl[1].MapD, "Z:\\SUM2014\\T07ANIM\\Textures\\s1.bmp");
-  strcpy(Mtl[1].Name, "Sky Field Material");
-  TexNo2 = EF2_GeomAddMaterial(&Unit->Obj[0], &Mtl[1]);  
-  
-  /* Create planes */
-  EF2_PrimCreatePlane(&Pr[1], VecSet(-100, 0, -100), VecSet(100, 0, -100), VecSet(-100, 100, -100), VecSet(100, 100, -100), VecSet(0, 0, 1), 5);
-  Pr[1].Mtl = TexNo2;
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[1]);
-  
-  EF2_PrimCreatePlane(&Pr[2], VecSet(-100, 0, -100), VecSet(-100, 0, 100), VecSet(-100, 100, -100), VecSet(-100, 100, 100), VecSet(1, 0, 0), 5);
-  Pr[2].Mtl = TexNo2;
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[2]);
-
-  EF2_PrimCreatePlane(&Pr[3], VecSet(-100, 0, 100), VecSet(100, 0, 100), VecSet(-100, 100, 100), VecSet(100, 100, 100), VecSet(0, 0, -1), 5);
-  Pr[3].Mtl = TexNo2;
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[3]);
-
-  EF2_PrimCreatePlane(&Pr[4], VecSet(100, 0, -100), VecSet(100, 0, 100), VecSet(100, 100, -100), VecSet(100, 100, 100), VecSet(-1, 0, 0), 5);
-  Pr[4].Mtl = TexNo2;
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[4]);
-
-  EF2_PrimCreatePlane(&Pr[5], VecSet(-100, 100, -100), VecSet(100, 100, -100), VecSet(-100, 100, 100), VecSet(100, 100, 100), VecSet(0, -1, 0), 5);
-  Pr[5].Mtl = TexNo2;
-  EF2_GeomAddPrim(&Unit->Obj[0], &Pr[5]);
+  //EF2_GeomLoad(&Unit->Obj[0], "Z:\\SUM2014\\T07ANIM\\Models\\b-36 OBJ\\b-36.obj");
+  EF2_GeomLoad(&Unit->Obj[0], "Z:\\SUM2014\\T07ANIM\\Models\\C172\\c172.object");
 
   /* Init camera */
   EF2_RndCam.At = VecSet(0, 0, 0);
@@ -118,9 +76,7 @@ MATR EF2_MatrCameraGetMatrix( VOID )
  */
 static VOID EF2_GobjUnitClose( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
-  EF2_GeomFree(&Unit->Obj[0]);
-  glDeleteTextures(1, &TexNo1);
-  glDeleteTextures(1, &TexNo2);
+  EF2_GeomFree(Unit->Obj);
 } /* End of 'EF2_GobjUnitClose' function */
 
 /* Response geometric unit of animation function.
@@ -239,67 +195,21 @@ static VOID EF2_GobjUnitResponse( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
  */
 static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
 {
-  /*
-  static MATR EF2_RndMatrWorldViewProj;
-  INT i = 0, loc = 0;
-  static DBL time = 0;
-  
-  EF2_RndMatrWorldViewProj = MatrIdenity();
-  Ani->MatrView = EF2_MatrViewLookAt(EF2_MatrMultVec(EF2_MatrRotateX(5 * Ani->CountY), VecSet(10, 10, Ani->CountX + 15)), VecSet(0, 0, 0), VecSet(0, 1, 0));
-  //Ani->MatrView = EF2_MatrMult4x4(Ani->MatrView, EF2_MatrRotateY(Ani->Time * 10));
-  Ani->MatrWorld = EF2_MatrRotateY(Ani->Time * 20);
-  Ani->MatrWorld = EF2_MatrMult4x4(MatrScale(0.30, 0.30, 0.30), Ani->MatrWorld);
-  //Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0.0, 0.0, 3 * 3.30), Ani->MatrWorld);
-  EF2_RndMatrWorldViewProj =
-    EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
-      Ani->MatrProjection);
-  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
-
-  time += Ani->GlobalDeltaTime;
-  if (time > 1)
-  {
-    time = 0;
-    EF2_ShadProgClose(EF2_ShaderProg);
-    EF2_ShaderProg = EF2_ShadProgInit("a.vert", "a.frag");
-  }
- 
-  /* выбор программы шейдеров вывода примитивов 
-  glEnable(GL_DEPTH_TEST);
-  glUseProgram(EF2_ShaderProg);
-  loc = glGetUniformLocation(EF2_ShaderProg, "Matr");
-  if (loc != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, EF2_RndMatrWorldViewProj.A[0]);
-  loc = glGetUniformLocation(EF2_ShaderProg, "Time");
-  if (loc != -1)
-    glUniform1f(loc, Ani->Time);
-
-  EF2_RndGObjDraw(&Unit->Obj[0], Ani->hDC);
-
-  /*
-  Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 0, 10), Ani->MatrWorld);
-  EF2_RndMatrWorldViewProj =
-    EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
-      Ani->MatrProjection);
-  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
-  EF2_RndGObjDraw(&Unit->Obj[0], Ani->hDC);
-  
-  //Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, 10 * sin(Ani->Time), -10), Ani->MatrWorld);
-
-  EF2_RndMatrWorldViewProj =
-    EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, Ani->MatrView),
-      Ani->MatrProjection);
-  glLoadMatrixf(&EF2_RndMatrWorldViewProj.A[0][0]);
-  glUseProgram(0);
-  */
-
   MATR WVP;
   static DBL time;
+  MATR 
+    V1 = MatrTranslate(EF2_RndCam.Dir.X, EF2_RndCam.Dir.Y, EF2_RndCam.Dir.Z),
+    V2 = MatrTranslate(EF2_RndCam.Loc.X - EF2_RndCam.Dir.X, EF2_RndCam.Loc.Y - EF2_RndCam.Dir.Y, EF2_RndCam.Loc.Z - EF2_RndCam.Dir.Z);
   /* оси и позиция наблюдателя */
   //Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(0, -1, 0), MatrIdenity());
   /*Ani->MatrView =
     EF2_MatrViewLookAt(
     EF2_MatrMultVec(EF2_MatrRotateY(Ani->JR * 90), EF2_MatrMultVec(EF2_MatrRotateZ(Ani->JY * 90 + 1), Ani->PosCam)),
       VecSet(0, 0, 0), VecSet(0, 1, 0));*/
+  Ani->MatrWorld = MatrIdenity();
+  Ani->MatrWorld = EF2_MatrRotateX(-90);
+  //Ani->MatrWorld = EF2_MatrMult4x4(MatrTranslate(EF2_RndCam.At.X, EF2_RndCam.At.Y, EF2_RndCam.At.Z), Ani->MatrWorld);
+  //EF2_MatrMult4x4(EF2_MatrMult4x4(EF2_MatrMult4x4(EF2_MatrMult4x4(Ani->MatrWorld, V2), V1), Ani->MatrWorld);
   WVP = EF2_MatrMult4x4(EF2_Anim.MatrWorld, EF2_MatrMult4x4(EF2_Anim.MatrView, EF2_Anim.MatrProjection));
   glLoadMatrixf(WVP.A[0]);
 
@@ -322,13 +232,13 @@ static VOID EF2_GobjUnitRender( ef2UNIT_GOBJ *Unit, ef2ANIM *Ani )
   else
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  Ani->MatrWorld = EF2_MatrRotateY(Ani->PosCam.X * 10);
-  Ani->MatrWorld = EF2_MatrMult4x4(EF2_MatrRotateX(0), Ani->MatrWorld);
+  /*Ani->MatrWorld = EF2_MatrRotateY(Ani->PosCam.X * 10);
+  Ani->MatrWorld = EF2_MatrMult4x4(EF2_MatrRotateX(0), Ani->MatrWorld);*/
   glEnable(GL_DEPTH_TEST);
   EF2_GeomDraw(&Unit->Obj[0]);
   //EF2_GeomDraw(&Unit->Obj[1]);
-  glUseProgram(0);
-  
+  glUseProgram(0);  
+  Ani->MatrWorld = MatrIdenity();
 } /* End of 'EF2_GobjUnitRender' function */
 
 /* Create geometric unit of animation function.

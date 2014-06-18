@@ -62,20 +62,20 @@ vec3 Illum( vec3 N )
 
 
 /* Main function */
-void main( void )
+void main( void )                             
 {
   float start = 2.5, end = -0.61;
   float dist = CameraPos.z;
   //if (dist < -1)
   //  discard;
   float t = 0.5;
-  if (dist > start)
-    t = 1;
-  else
-    if (dist < end)
-      t = 0;
-    else
-      t = abs(1 - (dist - start) / (end - start));
+//  if (dist > start)
+//    t = 1;
+//  else
+//    if (dist < end)
+//      t = 0;
+//    else
+//t = abs(1 - (dist - start) / (end - start));
   OutColor = vec4(Illum(normalize(DrawNormal)), Trans);// * t + vec4(0.3, 0.5, 0.7, 1) * (1 - t);
 } /* End of 'main' function */
 
